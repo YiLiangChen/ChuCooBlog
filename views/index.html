@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog</title>
+
+
+    <!-- Bootstrap Core CSS -->
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="stylesheets/scrolling-nav.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+
+
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page">
+<!-- <body id="page" data-spy="scroll" data-target=".navbar-fixed-top"> -->
+
+    <!-- Navigation -->1
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="navbar-header page-scroll">
+              <div class="container">
+                <span class = "show" id ="loginBtn"><a class="btn btn-primary btn-lg" href="#" id="login" data-toggle="modal" data-target="#ModalLogin">Login</a></span>
+                <span class = "hidden" id="logout"><a class="btn btn-info" href="#" button onclick="Logout()">Logout</a></span>
+                <span class = "hidden" id="userInfo" ><a class="btn btn-default" href="#" id="Userinfo" data-toggle="modal" data-target="#ModalUserinfo">Userinfo</a></span>
+                <span class = "hidden" id="post"><a class="btn btn-default" href="#" button onclick="">Post</a></span>
+
+            </div>
+
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Content Section -->
+    <section id="content" class="about-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>content</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+      <!-- 模态框（Modal） -->
+      <div class="modal fade" id="ModalLogin" tabindex="-1" role="dialog" aria-labelledby="ModalLoginLabel" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="ModalLoginLabel">登入頁面</h4>
+                  </div>
+                  <div class="modal-body" method="POST">
+                    <label>帳號：</label><input type="text" name="username" id="username"><br/>
+                    <label>密碼：</label><input type="text" name="password" id="password">
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Register</button>
+                      <input type="button" class="btn btn-primary" onClick="sendAccount();" value="Login">
+                  </div>
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal -->
+      </div>
+
+      <div class="modal fade" id="ModalUserinfo" tabindex="-1" role="dialog" aria-labelledby="ModalUserinfoLabel" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="ModalUserinfoLabel">使用者資訊</h4>
+                  </div>
+                  <div class="Userinfomodal-body" method="POST">
+                    <body onload="getUserInfo()">
+                    <div id ="userInfoBody"></div>
+                  </div>
+                  <div class="modal-footer">
+
+                  </div>
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal -->
+      </div>
+
+
+
+
+    <script type="text/javascript">
+      $(function () {
+        $("[data-toggle='popover']").popover();
+      });
+
+
+
+      function getUserInfo(){
+        /*
+        var username = req.body.username;
+        var password = req.body.password;
+        var name = req.body.name;
+        var gender = req.body.gender;
+        var address = req.body.address;
+        */
+        $.ajax({
+          type:"GET",
+          url:"/getUserInfo",
+          dataType:"json",
+          error:function(){
+            console.log("error");
+          },
+          success:function(data){
+            console.log("success");
+            console.log(data);
+
+            //document.getElementById("demo").innerHTML = obj.name;
+            //$('.Userinfomodal-body').html('');
+            $('.Userinfomodal-body').append(`
+              <span>&nbsp使用者帳號:</span>${data.username}<br>
+              <span>&nbsp使用者名稱:</span>${data.name}<br>
+              <span>&nbsp性別:</span>${data.gender}<br>
+              <span>&nbsp地址:</span>${data.address}<br>
+              `);
+          },
+        });
+
+      }
+
+/*
+      function getUserInfo(){
+        $.ajax({
+          url:"/getUserInfo",
+          data:{
+
+          },
+          type:"POST",
+          dataType:"json",
+        });
+      };
+*/
+/*
+      if (fs.existsSync('./userInfo.log')) {
+      	_userInfo = fs.readFileSync('./userInfo.log');
+      	if (_userInfo == '') {
+      		initUser();
+      	} else {
+      		_userInfo = JSON.parse(_userInfo);
+      		if (!_userInfo.username ||
+      			!_userInfo.password ||
+      			!_userInfo.name ||
+      			!_userInfo.gender ||
+      			!_userInfo.address) {
+      			initUser();
+      		}
+      	}
+      } else {
+      	initUser();
+      }
+
+      function initUser() {
+      	_userInfo = {
+      		username: 'admin',
+          password: '123456',
+          name: 'QQYamBall',
+      		gender: 'm',
+      		address: 'Puli'
+      	};
+        writeFile('userInfo', _userInfo);
+    }
+*/
+
+      function sendAccount(){
+        var username = $('#username').val();
+        var password = $('#password').val();
+        $.ajax({
+          url:"/login",
+          data:{
+            username:$('#username').val(),
+            password:$('#password').val()
+          },
+          type:"POST",
+          dataType:"json",
+          error:function(){
+            alert("fail");
+          },
+          success:function(){
+            //alert("success");
+            $('#loginBtn').removeClass("show");
+            $('#loginBtn').addClass("hidden");
+            $('#ModalLogin').modal('hide');
+            $('#userInfo').removeClass("hidden");
+            $('#post').removeClass("hidden");
+            $('#logout').removeClass("hidden");
+          }
+        });
+      };
+
+      function Logout(){
+
+          $.ajax({
+            url:"/logout",
+            data:{
+
+            },
+            type:"POST",
+            dataType:"json",
+            error:function(){
+              alert('fail');
+            },
+            success:function(){
+              //alert("success");
+              $('#loginBtn').removeClass("hidden");
+              $('#loginBtn').addClass("show");
+              $('#userInfo').addClass("hidden");
+              $('#post').addClass("hidden");
+              $('#logout').addClass("hidden");
+            }
+          });
+      };
+
+
+
+    </script>
+
+    <!-- jQuery -->
+    <script src="javascripts/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="javascripts/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="javascripts/jquery.easing.min.js"></script>
+    <script src="javascripts/scrolling-nav.js"></script>
+
+
+
+</body>
+
+</html>
